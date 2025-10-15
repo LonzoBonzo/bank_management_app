@@ -57,6 +57,8 @@ double Bank::deposit(double account_number, double amount) {
     return -1;
 }
 
+//The withdrawl feature. REMEMEBER IT PLEASE.
+
 string Bank::withdraw(double account_number, double amount) {
     for (int i = 0; i < num_clients; i++) {
         if (clients[i],bank_account_number == account_number) {
@@ -71,6 +73,8 @@ string Bank::withdraw(double account_number, double amount) {
     return "Account number not found. \n";
 }
 
+// Info saving section.
+
 void Bank::saving_info(string file_name) {
     ofstream fout(file_name);
     fout << num_client << endl;
@@ -80,6 +84,8 @@ void Bank::saving_info(string file_name) {
     fout.close();
 }
 
+
+// Finding client section.
 void Bank::find_client(double account_number) {
     for (int i = 0; i < num_client; i++) {
         if (clients[i].bank_account_number == account_number) {
@@ -92,6 +98,8 @@ void Bank::find_client(double account_number) {
     }
     cout << "This person doesn't exist. \n" << endl;
 }
+
+//ADDING a new client section.
 
 void Bank::add_new_client(Client new_client) {
     Client* temp = new Client[num_client + 1];
