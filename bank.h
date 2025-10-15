@@ -29,6 +29,7 @@ class Bank {
         string withdraw(double account_number, double amount);
         void saving_info(string file_name);
         void find_client(double account_number);
-        void add_client();
+        void add_new_client(Client new_client);
 };
+
 #endif
