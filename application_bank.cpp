@@ -4,27 +4,32 @@
 #include <iomanip>
 using namespace std;
 
+//Constructor..
+
 Bank::Bank(string file_name) {
     num_client = 0;
     clients = nullptr;
     load_clients_info(file_name);
 }
 
+//Deep Constructor.
+
 Bank::Bank(const Bank& other) {
-    num_client = other.num_client;
-    clients = new Client[num_client]; 
-    for (int i - 0; i < num_clients; i++) {
+    num_clients = other.num_clients;
+    clients = new Client[num_clients]; 
+    for (int i = 0; i < num_clients; i++) {
         clients[i] = other.clients[i];
     }
 
 }
 
+//Destructor..
 Bank::~Bank() {
     delete[] clients; 
 }
 
 void Bank::load_clients_info(string file_name) {
-    ifstream input_file(file_name); 
+    ifstream fin(file_name); 
     if(!fin) {
         cout << "Error opening file: " << file_name << endl;
         return;
@@ -77,9 +82,10 @@ string Bank::withdraw(double account_number, double amount) {
 
 void Bank::saving_info(string file_name) {
     ofstream fout(file_name);
-    fout << num_client << endl;
-    for (int = 0; i < num_client; i++) {
-        fout << clients[i].client_name << " " << clients[i].ssn
+    fout << num_clients << endl;
+    for (int i = 0; i < num_client; i++) {
+        fout << clients[i].client_name << " " << clients[i].ssn << " " 
+        << clients[i].bank_account_number << " " << clients[i].balance << end;
     }
     fout.close();
 }
@@ -87,7 +93,7 @@ void Bank::saving_info(string file_name) {
 
 // Finding client section.
 void Bank::find_client(double account_number) {
-    for (int i = 0; i < num_client; i++) {
+    for (int i = 0; i < num_clients; i++) {
         if (clients[i].bank_account_number == account_number) {
             cout << "Client's Name: " << clients[i].client_name << endl;
             cout << "SSN: " << clients[i].ssn << endl;
@@ -102,12 +108,12 @@ void Bank::find_client(double account_number) {
 //ADDING a new client section.
 
 void Bank::add_new_client(Client new_client) {
-    Client* temp = new Client[num_client + 1];
-    for (int i = 0; i < num_client; i++) {
+    Client* temp = new Client[num_clients + 1];
+    for (int i = 0; i < num_clients; i++) {
         temp[i] = clients[i];
     }
-    temp[num_client] = new_client;
+    temp[num_clients] = new_client;
     delete[] clients;
     clients = temp;
-    num_client++;
+    num_clients++;
 }

@@ -1,9 +1,8 @@
-#include <iostream> 
-#include <string> 
-
 #ifndef BANK_H 
 #define BANK_H 
 
+#include <iostream> 
+#include <string> 
 using namespace std; 
 
 struct Client {
