@@ -7,7 +7,7 @@ using namespace std;
 //Constructor..
 
 Bank::Bank(string file_name) {
-    num_client = 0;
+    num_clients = 0;
     clients = nullptr;
     load_clients_info(file_name);
 }
@@ -66,7 +66,7 @@ double Bank::deposit(double account_number, double amount) {
 
 string Bank::withdraw(double account_number, double amount) {
     for (int i = 0; i < num_clients; i++) {
-        if (clients[i],bank_account_number == account_number) {
+        if (clients[i].bank_account_number == account_number) {
             if (clients[i].balance >= amount) {
                 clients [i].balance -= amount;
                 return "Withdrawal Updated. \n";
@@ -83,8 +83,11 @@ string Bank::withdraw(double account_number, double amount) {
 void Bank::saving_info(string file_name) {
     ofstream fout(file_name);
     fout << num_clients << endl;
-    for (int i = 0; i < num_client; i++) {
-        fout << clients[i].client_name << " " << clients[i].ssn << " " << clients[i].bank_account_number << " " << clients[i].balance << end;
+    for (int i = 0; i < num_clients; i++) {
+        fout << clients[i].client_name << " " 
+        << clients[i].ssn << " " 
+        << clients[i].bank_account_number << " " 
+        << clients[i].balance << endl;
     }
     fout.close();
 }
