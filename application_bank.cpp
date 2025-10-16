@@ -84,8 +84,7 @@ void Bank::saving_info(string file_name) {
     ofstream fout(file_name);
     fout << num_clients << endl;
     for (int i = 0; i < num_client; i++) {
-        fout << clients[i].client_name << " " << clients[i].ssn << " " 
-        << clients[i].bank_account_number << " " << clients[i].balance << end;
+        fout << clients[i].client_name << " " << clients[i].ssn << " " << clients[i].bank_account_number << " " << clients[i].balance << end;
     }
     fout.close();
 }
