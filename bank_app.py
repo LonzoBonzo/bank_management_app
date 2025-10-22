@@ -3,7 +3,7 @@ from tkinter import *
 from tkinter import messagebox, filedialog
 
 # Load the shared library
-lib = ctypes.CDLL("./libclient_management.so")  # change to "./libclient_management.so" if on Linux/Mac
+lib = ctypes.CDLL("./client_management.dll")  # change to "./libclient_management.so" if on Linux/Mac
 
 # Define argument and return types for wrapper functions
 lib.Bank_new.argtypes = [ctypes.c_char_p]
