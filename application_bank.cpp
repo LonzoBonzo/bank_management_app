@@ -119,3 +119,20 @@ void Bank::add_new_client(Client new_client) {
     clients = temp;
     num_clients++;
 }
+
+extern "C" {
+    Bank* Bank_new(const char* file_name) {return new Bank(file_name);}
+    void Bank_delete(Bank* b) {delete b;}
+    double Bank_deposit(Bank* b, double acc, double amount) {return b->deposit(acc, amount);}
+    const char* Bank_withdraw(Bank* b, double acc, double amount) {
+        static string result;
+        result = b->withdraw(acc, amount);
+        return result.c_str();
+    }
+    void Bank_find_client(Bank* b, double acc) {b->find_client(acc);}
+    void Bank_add_client(Bank* b, const char* name, const char* ssn, double acc, double bal) {
+        Client c = {name, ssn, acc, bal};
+        b->add_new_client(c);
+    }
+    void Bank_save(Bank* b, const char* file_name) {b->saving_info(file_name);}
+}
