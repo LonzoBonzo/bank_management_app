@@ -130,7 +130,7 @@ extern "C" {
         return result.c_str();
     }
     void Bank_find_client(Bank* b, double acc) {b->find_client(acc);}
-    void Bank_add_client(Bank* b, const char* name, const char* ssn, double acc, double bal) {
+    void Bank_add_new_client(Bank* b, const char* name, const char* ssn, double acc, double bal) {
         Client c = {name, ssn, acc, bal};
         b->add_new_client(c);
     }
