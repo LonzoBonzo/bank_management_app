@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
+#include <string>
 using namespace std;
 
 //Constructor..
@@ -125,7 +126,7 @@ extern "C" {
     void Bank_delete(Bank* b) {delete b;}
     double Bank_deposit(Bank* b, double acc, double amount) {return b->deposit(acc, amount);}
     const char* Bank_withdraw(Bank* b, double acc, double amount) {
-        static string result;
+        static std::string result;
         result = b->withdraw(acc, amount);
         return result.c_str();
     }
