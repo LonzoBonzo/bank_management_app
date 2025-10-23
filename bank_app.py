@@ -1,6 +1,6 @@
 import ctypes
-from tkinter import *
 from tkinter import messagebox, filedialog
+from cytypes import cdll, c_char_p, c_double, c_void_p 
 
 # Load the shared library
 lib = ctypes.CDLL("./libclient_management.so") 
