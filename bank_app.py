@@ -3,7 +3,7 @@ import ctypes
 from ctypes import cdll, c_char_p, c_double, c_void_p 
 
 # Load the shared library
-lib = ctypes.CDLL("./libclient_management.so") 
+lib = ctypes.CDLL("./client_management.dll") 
 
 # Define argument and return types for wrapper functions
 lib.Bank_new.argtypes = [ctypes.c_char_p]
