@@ -1,7 +1,5 @@
-from tkinter import Tk, Label, Button
-root=tk.Tk()
+from tkinter import Tk, Label, Button, Entry, messagebox, filedialog
 import ctypes
-from tkinter import messagebox, filedialog
 from ctypes import cdll, c_char_p, c_double, c_void_p 
 
 # Load the shared library
