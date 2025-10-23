@@ -1,19 +1,38 @@
 from tkinter import Tk, Label, Button, Entry, messagebox, filedialog
 import ctypes
 from ctypes import cdll, c_char_p, c_double, c_void_p 
+import os
+import sys
 
-# Load the shared library
-lib = ctypes.CDLL("./client_management.dll") 
 
-# Define argument and return types for wrapper functions
-lib.Bank_new.argtypes = [ctypes.c_char_p]
-lib.Bank_new.restype = ctypes.c_void_p
+try:
+    lib = ctypes.CDLL("./client_management.dll")
+    DLL_LOADED = True
+    print("DLL loaded successfully!")
+except Exception as e:
+    print(f"DLL not found: {e}")
+    print("Running in mock mode for testing...")
+    DLL_LOADED = False
+    
+ 
+    class MockLib:
+        def __getattr__(self, name):
+            def mock_method(*args, **kwargs):
+                print(f"Mock method called: {name} with args: {args[1:]}")
+                return 1  
+            return mock_method
+    lib = MockLib()
 
-lib.Bank_deposit.argtypes = [ctypes.c_void_p, ctypes.c_int, ctypes.c_double]
-lib.Bank_withdraw.argtypes = [ctypes.c_void_p, ctypes.c_int, ctypes.c_double]
-lib.Bank_add_new_client.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_int, ctypes.c_double]
-lib.Bank_find_client.argtypes = [ctypes.c_void_p, ctypes.c_int]
-lib.Bank_save.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+
+if DLL_LOADED:
+    lib.Bank_new.argtypes = [ctypes.c_char_p]
+    lib.Bank_new.restype = ctypes.c_void_p
+
+    lib.Bank_deposit.argtypes = [ctypes.c_void_p, ctypes.c_int, ctypes.c_double]
+    lib.Bank_withdraw.argtypes = [ctypes.c_void_p, ctypes.c_int, ctypes.c_double]
+    lib.Bank_add_new_client.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_int, ctypes.c_double]
+    lib.Bank_find_client.argtypes = [ctypes.c_void_p, ctypes.c_int]
+    lib.Bank_save.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
 
 
 class BankApp:
@@ -21,8 +40,12 @@ class BankApp:
         self.master = master
         self.master.title("Bank Management System")
         self.master.geometry("400x400")
+        
+        if not DLL_LOADED:
+            Label(master, text="RUNNING IN MOCK MODE - DLL NOT FOUND", 
+                  fg="red", font=("Arial", 10, "bold")).pack(pady=5)
 
-        # ---- Load Bank File ----
+       
         Button(master, text="Load Clients File", command=self.load_file).pack(pady=10)
 
         # ---- Deposit ----
