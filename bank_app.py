@@ -1,6 +1,5 @@
 from tkinter import Tk, Label, Button, Entry, messagebox, filedialog
 import ctypes
-ctypes.CDLL("cm.dll")
 from ctypes import cdll, c_char_p, c_double, c_void_p, c_int 
 import os
 import sys
