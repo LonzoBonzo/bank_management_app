@@ -199,6 +199,8 @@ class BankApp:
         
         self.master.after(100, self.autosave)
 
+    
+
     # ----------- Close / Exit -----------
     def on_close(self):
         """Automatically save client data when window closes."""
