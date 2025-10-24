@@ -64,11 +64,11 @@ class BankApp:
             Label(master, text="RUNNING IN MOCK MODE - DLL NOT FOUND", 
                   fg="red", font=("Arial", 10, "bold")).pack(pady=5)
 
-       
+        # --- Load & show ---
         Button(master, text="Load Clients File", command=self.load_file).pack(pady=10)
         Button(master, text="Show client Info", command=self.show_client_info).pack(pady=5)
 
-        # ---- Deposit ----
+        # ---- Deposit / Withdraw ----
         Label(master, text="Client ID").pack()
         self.client_id_entry = Entry(master)
         self.client_id_entry.pack()
@@ -99,7 +99,6 @@ class BankApp:
 
         self.master.protocol("WM_DELETE_WINDOW", self.on_close)
 
-
     # ----------- Backend Actions -----------
 
     def load_file(self):
@@ -110,29 +109,31 @@ class BankApp:
         self.save_path = file_path 
         messagebox.showinfo("Success", "Clients loaded successfully!")
 
+        # Start autosave loop
+        self.autosave()
+
     def show_client_info(self): 
         try:
             cid = int(self.client_id_entry.get())
             client_ptr = lib.Bank_find_client(self.bank, cid)
             if not client_ptr:
-                messagebox.showerror("Error", "Client wasn't found dumbass")
+                messagebox.showerror("Error", "Client wasn't found")
                 return
             
             name_ptr = lib.Bank_get_client_name(self.bank, cid)
-            name = name_ptr.decode('utf-8') if name_ptr else ("N/A")
+            name = name_ptr.decode('utf-8') if name_ptr else "N/A"
 
             phone_ptr = lib.Bank_get_client_phone(self.bank, cid)
-            phone = phone_ptr.decode('utf-8') if phone_ptr else ("N/A") 
+            phone = phone_ptr.decode('utf-8') if phone_ptr else "N/A" 
 
             balance = lib.Bank_get_client_balance(self.bank, cid)
 
             messagebox.showinfo(
                 "Client Info", 
                 f"Name: {name}\nPhone: {phone}\nAccount #: {cid}\nBalance: ${balance:.2f}"
-                )
+            )
         except ValueError: 
-            messagebox.showerror("Error", "Wrong Input Dude.")
-            
+            messagebox.showerror("Error", "Wrong Input.")
 
     def deposit(self):
         if not hasattr(self, 'bank'):
@@ -142,6 +143,11 @@ class BankApp:
             cid = int(self.client_id_entry.get())
             amount = float(self.amount_entry.get())
             lib.Bank_deposit(self.bank, cid, amount)
+
+            # Save immediately
+            if hasattr(self, 'save_path') and self.save_path:
+                lib.Bank_save(self.bank, self.save_path.encode('utf-8'))
+
             messagebox.showinfo("Success", f"${amount} deposited to client {cid}")
         except ValueError:
             messagebox.showerror("Error", "Invalid input!")
@@ -154,6 +160,11 @@ class BankApp:
             cid = int(self.client_id_entry.get())
             amount = float(self.amount_entry.get())
             lib.Bank_withdraw(self.bank, cid, amount)
+
+            # Save immediately
+            if hasattr(self, 'save_path') and self.save_path:
+                lib.Bank_save(self.bank, self.save_path.encode('utf-8'))
+
             messagebox.showinfo("Success", f"${amount} withdrawn from client {cid}")
         except ValueError:
             messagebox.showerror("Error", "Invalid input!")
@@ -169,43 +180,43 @@ class BankApp:
             balance = float(self.balance_entry.get())
 
             lib.Bank_add_new_client(self.bank, name, phone, acc, balance)
-            messagebox.showinfo("Success", "New client added!")
+
+            # Save immediately
+            if hasattr(self, 'save_path') and self.save_path:
+                lib.Bank_save(self.bank, self.save_path.encode('utf-8'))
+
+            messagebox.showinfo("Success", "New client added and saved!")
         except ValueError:
             messagebox.showerror("Error", "Invalid input!")
-    
 
+    # ----------- Autosave Loop -----------
+    def autosave(self):
+        """Automatically save bank data every 5 seconds."""
+        if hasattr(self, 'bank') and hasattr(self, 'save_path') and self.save_path:
+            try:
+                lib.Bank_save(self.bank, self.save_path.encode('utf-8'))
+            except Exception as e:
+                print(f"Autosave failed: {e}")
+        # Schedule next autosave in 5000 ms (5 seconds)
+        self.master.after(5000, self.autosave)
+
+    # ----------- Close / Exit -----------
     def on_close(self):
         """Automatically save client data when window closes."""
-        if hasattr(self, 'bank'):
-            if self.save_path:
-                # Save silently to the same file we loaded
-                try:
-                    lib.Bank_save(self.bank, self.save_path.encode('utf-8'))
-                    # optional: messagebox.showinfo("Saved", f"Clients saved to {self.save_path}")
-                except Exception as e:
-                    # if save fails, ask user what to do
-                    resp = messagebox.askyesno("Save failed", f"Auto-save failed: {e}\nDo you want to try Save As?")
-                    if resp:
-                        save_path = filedialog.asksaveasfilename(
-                            title="Save clients file",
-                            defaultextension=".txt",
-                            filetypes=[("Text files", "*.txt"), ("All files", "*.*")]
-                        )
-                        if save_path:
-                            lib.Bank_save(self.bank, os.path.abspath(save_path).encode('utf-8'))
-            else:
-                # If no file was loaded, ask where to save
-                save_path = filedialog.asksaveasfilename(
-                    title="Save clients file",
-                    defaultextension=".txt",
-                    filetypes=[("Text files", "*.txt"), ("All files", "*.*")]
-                )
-                if save_path:
-                    lib.Bank_save(self.bank, os.path.abspath(save_path).encode('utf-8'))
-
-        
+        if hasattr(self, 'bank') and hasattr(self, 'save_path') and self.save_path:
+            try:
+                lib.Bank_save(self.bank, self.save_path.encode('utf-8'))
+            except Exception as e:
+                resp = messagebox.askyesno("Save failed", f"Auto-save failed: {e}\nDo you want to try Save As?")
+                if resp:
+                    save_path = filedialog.asksaveasfilename(
+                        title="Save clients file",
+                        defaultextension=".txt",
+                        filetypes=[("Text files", "*.txt"), ("All files", "*.*")]
+                    )
+                    if save_path:
+                        lib.Bank_save(self.bank, os.path.abspath(save_path).encode('utf-8'))
         self.master.destroy()
-
 
 # ----------- Run GUI -----------
 if __name__ == "__main__":
