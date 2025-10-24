@@ -142,10 +142,7 @@ class BankApp:
             cid = int(self.client_id_entry.get())
             amount = float(self.amount_entry.get())
             lib.Bank_deposit(self.bank, cid, amount)
-
-            # Save immediately
-            if hasattr(self, 'save_path') and self.save_path:
-                lib.Bank_save(self.bank, self.save_path.encode('utf-8'))
+            self.save_bank()
 
             messagebox.showinfo("Success", f"${amount} deposited to client {cid}")
         except ValueError:
@@ -160,9 +157,7 @@ class BankApp:
             amount = float(self.amount_entry.get())
             lib.Bank_withdraw(self.bank, cid, amount)
 
-            
-            if hasattr(self, 'save_path') and self.save_path:
-                lib.Bank_save(self.bank, self.save_path.encode('utf-8'))
+            self.save_bank()
 
             messagebox.showinfo("Success", f"${amount} withdrawn from client {cid}")
         except ValueError:
@@ -179,6 +174,7 @@ class BankApp:
             balance = float(self.balance_entry.get())
 
             lib.Bank_add_new_client(self.bank, name, phone, acc, balance)
+            self.save_bank()
 
           
             if hasattr(self, 'save_path') and self.save_path:
@@ -199,7 +195,13 @@ class BankApp:
         
         self.master.after(100, self.autosave)
 
-    
+    def save_bank(self): 
+        """Save the bank data immediately."""
+        if hasattr(self, 'bank') and hasattr(self, 'save_path') and self.save_path:
+            try:
+                lib.Bank_save(self.bank, self.save_path.encode('utf-8'))
+            except Exception as e:
+                messagebox.showerror("Save failed", f"Save failed: {e}")
 
     # ----------- Close / Exit -----------
     def on_close(self):
