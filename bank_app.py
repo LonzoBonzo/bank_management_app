@@ -115,7 +115,7 @@ class BankApp:
         try:
             cid = int(self.client_id_entry.get())
             client_ptr = lib.Bank_find_client(self.bank, cid)
-            if not client_ptr:
+            if client_ptr == 0 or client_ptr is None:
                 messagebox.showerror("Error", "Client wasn't found")
                 return
             
@@ -193,13 +193,14 @@ class BankApp:
             except Exception as e:
                 print(f"Autosave failed: {e}")
         
-        self.master.after(1000, self.autosave)
+        self.master.after(5000, self.autosave)
 
     def save_bank(self): 
         """Save the bank data immediately."""
         if hasattr(self, 'bank') and hasattr(self, 'save_path') and self.save_path:
             try:
                 lib.Bank_save(self.bank, self.save_path.encode('utf-8'))
+                print(f"Bank saved to {self.save_path}  immediately.")
             except Exception as e:
                 messagebox.showerror("Save failed", f"Save failed: {e}")
 
