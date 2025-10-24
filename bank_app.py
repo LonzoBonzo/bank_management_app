@@ -35,7 +35,7 @@ if DLL_LOADED:
     lib.Bank_deposit.argtypes = [ctypes.c_void_p, ctypes.c_int, ctypes.c_double]
     lib.Bank_withdraw.argtypes = [ctypes.c_void_p, ctypes.c_int, ctypes.c_double]
     lib.Bank_add_new_client.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_int, ctypes.c_double]
-    lib.Bank_find_client.argtypes = [ctypes.c_void_p, ctypes.c_int]
+    lib.Bank_find_client. = [ctypes.c_void_p, ctypes.c_int]
     lib.Bank_save.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
     lib.Bank_deposit.argtypes = [ctypes.c_void_p, ctypes.c_int, ctypes.c_double]
     lib.Bank_withdraw.argtypes = [ctypes.c_void_p, ctypes.c_int, ctypes.c_double]
@@ -193,7 +193,7 @@ class BankApp:
             except Exception as e:
                 print(f"Autosave failed: {e}")
         
-        self.master.after(100, self.autosave)
+        self.master.after(1000, self.autosave)
 
     def save_bank(self): 
         """Save the bank data immediately."""
