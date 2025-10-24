@@ -13,7 +13,7 @@ struct Client {
 };
 
 class Bank {
-    private:
+    public:
         int num_clients;
         Client* clients;
 

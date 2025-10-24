@@ -125,6 +125,7 @@ extern "C" {
     Bank* Bank_new(const char* file_name) {return new Bank(file_name);}
     void Bank_delete(Bank* b) {delete b;}
     double Bank_deposit(Bank* b, double acc, double amount) {return b->deposit(acc, amount);}
+
     const char* Bank_withdraw(Bank* b, double acc, double amount) {
         static std::string result;
         result = b->withdraw(acc, amount);
@@ -136,4 +137,46 @@ extern "C" {
         b->add_new_client(c);
     }
     void Bank_save(Bank* b, const char* file_name) {b->saving_info(file_name);}
+
+    const char* Bank_get_client_name(Bank* b, double acc) {
+        static std::string name;
+        for (int i = 0; i < b->num_clients; i++) {
+            if (b->clients[i].bank_account_number == acc) {
+                name = b->clients[i].client_name;
+                return name.c_str();
+            }
+        }
+        return nullptr;
+    }
+
+    const char* Bank_get_client_phone(Bank* b, double acc) {
+        static std::string phone;
+        for (int i = 0; i < b->num_clients; i++) {
+            if (b->clients[i].bank_account_number == acc) {
+                phone = b->clients[i].ssn;
+                return phone.c_str();
+            }
+        }
+        return nullptr;
+    }
+
+    const char* Bank_get_client_ssn(Bank* b, double acc) {
+        static std::string tmp;
+        for (int i = 0; i < b->num_clients; i++) {
+            if (b->clients[i].bank_account_number == acc) {
+                tmp = b->clients[i].ssn;
+                return tmp.c_str();
+            }
+        }
+        return nullptr;
+    }
+
+    double Bank_get_client_balance(Bank* b, double acc) {
+        for (int i =0; i < b->num_clients; i++) {
+            if (b->clients[i].bank_account_number == acc) {
+                return b->clients[i].balance;
+            }
+        }
+        return -1;
+    }
 }
