@@ -64,11 +64,11 @@ class BankApp:
             Label(master, text="RUNNING IN MOCK MODE - DLL NOT FOUND", 
                   fg="red", font=("Arial", 10, "bold")).pack(pady=5)
 
-        # --- Load & show ---
+        
         Button(master, text="Load Clients File", command=self.load_file).pack(pady=10)
         Button(master, text="Show client Info", command=self.show_client_info).pack(pady=5)
 
-        # ---- Deposit / Withdraw ----
+        
         Label(master, text="Client ID").pack()
         self.client_id_entry = Entry(master)
         self.client_id_entry.pack()
@@ -99,7 +99,7 @@ class BankApp:
 
         self.master.protocol("WM_DELETE_WINDOW", self.on_close)
 
-    # ----------- Backend Actions -----------
+    
 
     def load_file(self):
         file_path = filedialog.askopenfilename(title="Select clients file")
@@ -161,7 +161,7 @@ class BankApp:
             amount = float(self.amount_entry.get())
             lib.Bank_withdraw(self.bank, cid, amount)
 
-            # Save immediately
+            
             if hasattr(self, 'save_path') and self.save_path:
                 lib.Bank_save(self.bank, self.save_path.encode('utf-8'))
 
@@ -181,7 +181,7 @@ class BankApp:
 
             lib.Bank_add_new_client(self.bank, name, phone, acc, balance)
 
-            # Save immediately
+          
             if hasattr(self, 'save_path') and self.save_path:
                 lib.Bank_save(self.bank, self.save_path.encode('utf-8'))
 
@@ -189,7 +189,7 @@ class BankApp:
         except ValueError:
             messagebox.showerror("Error", "Invalid input!")
 
-    # ----------- Autosave Loop -----------
+    
     def autosave(self):
         """Automatically save bank data every 5 seconds."""
         if hasattr(self, 'bank') and hasattr(self, 'save_path') and self.save_path:
@@ -197,8 +197,8 @@ class BankApp:
                 lib.Bank_save(self.bank, self.save_path.encode('utf-8'))
             except Exception as e:
                 print(f"Autosave failed: {e}")
-        # Schedule next autosave in 5000 ms (5 seconds)
-        self.master.after(5000, self.autosave)
+        
+        self.master.after(100, self.autosave)
 
     # ----------- Close / Exit -----------
     def on_close(self):
@@ -218,7 +218,7 @@ class BankApp:
                         lib.Bank_save(self.bank, os.path.abspath(save_path).encode('utf-8'))
         self.master.destroy()
 
-# ----------- Run GUI -----------
+
 if __name__ == "__main__":
     root = Tk()
     app = BankApp(root)
