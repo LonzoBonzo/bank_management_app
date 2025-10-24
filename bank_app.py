@@ -35,7 +35,7 @@ if DLL_LOADED:
     lib.Bank_deposit.argtypes = [ctypes.c_void_p, ctypes.c_int, ctypes.c_double]
     lib.Bank_withdraw.argtypes = [ctypes.c_void_p, ctypes.c_int, ctypes.c_double]
     lib.Bank_add_new_client.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_int, ctypes.c_double]
-    lib.Bank_find_client. = [ctypes.c_void_p, ctypes.c_int]
+    lib.Bank_find_client = [ctypes.c_void_p, ctypes.c_int]
     lib.Bank_save.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
     lib.Bank_deposit.argtypes = [ctypes.c_void_p, ctypes.c_int, ctypes.c_double]
     lib.Bank_withdraw.argtypes = [ctypes.c_void_p, ctypes.c_int, ctypes.c_double]
